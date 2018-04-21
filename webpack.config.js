@@ -1,13 +1,28 @@
 
 const webpack = require('webpack')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 // 使用的是webpack @3.x
 module.exports = {
   plugins: [
-    new webpack.BannerPlugin('北京烤鸭的翻版')
+    // 注释插件
+    new webpack.BannerPlugin('北京烤鸭的翻版'),
+
+    // 依据app下 index.tmpl.html模板生成自动引用打包之后js文件的index.html
+    // 其实就是有很多js就不用自己受用引用啦
+    new HtmlWebpackPlugin({
+      template: __dirname + "/app/index.tmpl.html"
+    }),
+
+    // 热加载插件( 自动刷新实时预览修改后的效果 )
+    // HMR
+    // 针对这此有使用到react 用到热加载的话就要配合babel的react-transform-hmr 插件来使用
+    // 才可以实时预览
+    new webpack.HotModuleReplacementPlugin()
   ],
 
-  //  调试,只在开发阶段使用
+  // 生成Source Maps（使调试更容易）
+  // 调试,只在开发阶段使用
   devtool: 'eval-source-map',
 
   // 页面入口文件配置
@@ -18,7 +33,7 @@ module.exports = {
   // 入口文件   输出配置
   output: {
     // 最终存放位置
-    path:  __dirname + '/public',
+    path:  __dirname + '/build',
     filename: 'bundle.js'
   },
 
@@ -27,13 +42,16 @@ module.exports = {
   // 本地服务器配置 
   // 更多配置https://webpack.js.org/configuration/dev-server/
   devServer: {
-    contentBase: "./public", //本地服务器所加载的页面所在的目录, 通常用于静态资源
+    contentBase: "./build", //本地服务器所加载的页面所在的目录, 通常用于静态资源
 
     // 依赖于HTML5 history API，如果设置为true，所有的跳转将指向index.html
     historyApiFallback: true,
 
     // 当源文件改变时会自动刷新页面
-    inline: true
+    inline: true,
+
+    // 开启热加载
+    hot: true
   },
 
 
@@ -70,23 +88,5 @@ module.exports = {
       }
     ]
   },
-
-  // resolve: {
-  //   // 其他解决方案配置
-  //   root: {
-
-  //     //查找module的话从这里开始查找
-  //     root: 'E:/woods/Learning/Webpack/src',
-
-  //     // 自动拓展文件后缀名, 意味着我们require模块可以省略不些后缀名
-  //     extensions: ['', '.js', '.json', '.scss'],
-
-  //     // 模块别名定义，方便在后续直接饮用别名，无须写常常的地址!
-  //     alias: {
-  //       // Somthing code
-  //       // key: path  ex: aa: 'js/...' 
-  //     }
-  //   }
-  // }
 
 }
