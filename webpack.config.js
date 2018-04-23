@@ -1,4 +1,5 @@
 
+// 引入插件
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
@@ -51,6 +52,8 @@ module.exports = {
     inline: true,
 
     // 开启热加载
+
+    // 热加载
     hot: true
   },
 
@@ -83,6 +86,8 @@ module.exports = {
             options: {
               modules: true
             }
+          },{
+            loader: "postcss-loader"
           }
         ]
       }
